@@ -670,7 +670,11 @@ def _get_dsp(dtype):
 
     # calculate the dispersive parameter of the molecule
     ek = np.vectorize(ddict.get)(dtype)
-    ek = np.sum(ek) / np.count_nonzero(ek)
+    if None in ek:
+
+        return None
+    else:
+        ek = np.sum(ek) / np.count_nonzero(ek)
 
     return ek
 
@@ -689,6 +693,8 @@ def retrieve_sigma_profile(file_dir) -> dict:
     dtype, stype, dnatr = _get_atom_type(atoms, bonds)
     sigma_profiles = _get_sigma(atoms, seg, stype).reshape(1, 4, 51)
     ek = _get_dsp(dtype)
+
+    print(ek)
 
     return {
         "area": area,
