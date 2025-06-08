@@ -745,8 +745,6 @@ def cal_ln_gam_res(A, psigA, x, T):
         Residual activity coefficients of components.
     """
     # calculate intermediate terms
-    print(psigA.shape)
-
     psig = np.einsum("itm,i->itm", psigA, 1 / A)
     psig_mix = np.einsum("i,itm->tm", x, psigA) / np.sum(x * A)
 
@@ -881,10 +879,6 @@ def calculate_gamma(chemical_profiles: list, x: list, T: float) -> list:
     ln_gam_comb = cal_ln_gam_comb(areas, volumes, x)
     ln_gam_res = cal_ln_gam_res(areas, psigA, x, T)
     ln_gam_dsp = cal_ln_gam_dsp(x, eks, natrs)
-
-    print(ln_gam_comb)
-    print(ln_gam_res)
-    print(ln_gam_dsp)
 
     ln_gam = ln_gam_comb + ln_gam_res + ln_gam_dsp
     gam: np.ndarray = np.exp(ln_gam)
