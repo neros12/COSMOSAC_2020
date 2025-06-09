@@ -17,6 +17,7 @@ _z = 10  # coordination number
 _R = 1.987204258e-3  # gas constant [kcal/K/mol]
 _AES = 6525.69  # electrostatic constant A [kcal*ang**4/mol/e**2]
 _BES = 1.4859e8  # electrostatic constant B [kcal*Å**4*K**2/mol/e**2]
+_sig0 = 0.007  # hydrogen bondable screening charge [e/Å**2]
 
 _aeff = 7.25  # effective area [Å**2], number of sigma profiles,
 _chb = np.array(
@@ -426,6 +427,10 @@ def _get_sigma(atom, seg, stype):
     psigA = np.zeros((num_sp, 51))
     np.add.at(psigA, (sig_type, left), w * seg_area)
     np.add.at(psigA, (sig_type, left + 1), (1 - w) * seg_area)
+
+    phb = 1 - np.exp(-(sig**2) / 2 / _sig0**2)
+    psigA[0] = psigA[0] + np.sum(psigA[1:], axis=0) * (1 - phb)
+    psigA[1:] = psigA[1:] * phb
 
     return psigA
 
